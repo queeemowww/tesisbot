@@ -6,9 +6,7 @@ from aiogram.enums import ParseMode
 import states
 from kb import manager_builder
 
-
 router = Router()
-
 
 @router.callback_query(F.data == "manager")
 async def connect_manager(callback: types.CallbackQuery, state: FSMContext):
