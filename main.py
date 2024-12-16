@@ -12,19 +12,23 @@ from kb import menu_builder, airport_track_builder
 import text
 import handlers.order_h as order_h
 import handlers.track_h as track_h
+import handlers.manager_h as manager_h
+import handlers.contacts_h as contacts_h
 
+from utils.tarcker import Tracker
 import os
 
 load_dotenv()
 
 class TesisBot():
+    tracker = None
     def __init__(self):
         bot_token = os.getenv('BOT_TOKEN')
         logging.basicConfig(level=logging.INFO)
         self.bot = Bot(token=bot_token, default=DefaultBotProperties(
                 parse_mode=ParseMode.MARKDOWN_V2))
         self.dp = Dispatcher()
-        self.dp.include_routers(order_h.router, track_h.router)
+        self.dp.include_routers(order_h.router, track_h.router, manager_h.router, contacts_h.router)
 
     async def logic(self):
         # Хэндлер на команду /start

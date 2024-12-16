@@ -5,3 +5,6 @@ class Track(StatesGroup):
     airport = State()
     blank = State()
     number = State()
+
+class Manager(StatesGroup):
+    manager = State()
