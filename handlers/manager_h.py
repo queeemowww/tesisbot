@@ -9,15 +9,6 @@ from kb import manager_builder
 router = Router()
 
 @router.callback_query(F.data == "manager")
-async def connect_manager(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer('Переключаю на менеджера\.\.\.', reply_markup=manager_builder.as_markup())
-    await state.set_state(states.Manager.manager)
-
-# @router.message(states.Manager.manager)
-# async def send_to_manager(message: types.Message, state: FSMContext):
-#     await bot.send_message
-
-@router.callback_query(states.Manager.manager, F.data == 'stop_manager')
-async def manager_2(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer('Конец разговора с менеджером')
-    await state.set_state(None)
+async def connect_manager(callback: types.CallbackQuery):
+    await callback.message.answer("Опишите Ваш запрос оператору")
+    await callback.message.bot.send_contact(chat_id=callback.message.chat.id, phone_number='+79818401424', first_name='Tesis operator')

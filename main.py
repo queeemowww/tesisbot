@@ -4,18 +4,18 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command, StateFilter
 from aiogram.client.default import DefaultBotProperties
 from aiogram import F
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
-from kb import menu_builder, airport_track_builder
+from kb import menu_builder
 import text
 import handlers.order_h as order_h
 import handlers.track_h as track_h
 import handlers.manager_h as manager_h
 import handlers.contacts_h as contacts_h
 
-from utils.tarcker import Tracker
+from aiogram.fsm.context import FSMContext
+
 import os
 
 load_dotenv()
@@ -39,13 +39,19 @@ class TesisBot():
                 reply_markup=menu_builder.as_markup()
             )
 
-        @self.dp.message(F.text.lower() == 'меню')
+        @self.dp.message(StateFilter(None), F.text.lower() != 'нюся')
         async def cmd_menu(message: types.Message):
             await message.answer(
-                "Выберите действие: ",
+                "Выберите действие",
                 reply_markup=menu_builder.as_markup()
             )
-
+        
+        "Очистить контекст состояний"
+        
+        @self.dp.message(Command('clear'))
+        async def test(message: types.Message, state: FSMContext):
+            await state.set_state(None)
+        
     # Запуск процесса поллинга новых апдейтов
     async def main(self):
         await self.logic()

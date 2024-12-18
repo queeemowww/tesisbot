@@ -5,6 +5,10 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ParseMode
 import states
+from aiogram.types.input_file import FSInputFile
+
+awb_blank = FSInputFile('./img/awb_blank.png')
+awb_num = FSInputFile('./img/awb_num.png')
 
 from utils.tarcker import Tracker
 
@@ -28,7 +32,7 @@ async def track_1_1(message: types.Message, state: FSMContext):
 async def track_2(callback: types.Message, state: FSMContext):
     global airport
     airport = F.data
-    await callback.message.answer('Введите бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
+    await callback.message.answer_photo(photo = awb_blank, caption = 'Введите бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
                                   reply_markup= tracking_cancel_builder.as_markup())
     await state.set_state(states.Track.blank)
 
@@ -37,8 +41,8 @@ async def track_3(message: types.Message, state: FSMContext):
     global blank
     blank = message.text
     print(type(message.text))
-    await message.answer('Введите номер ГАН \(8 цифр, например\: \.\.\.\-*12345678*\)', 
-                         reply_markup= tracking_cancel_builder.as_markup())
+    await message.answer_photo(photo = awb_num, caption = 'Введите номер ГАН \(8 цифр, например\: \.\.\.\-*12345678*\)', 
+                                  reply_markup= tracking_cancel_builder.as_markup())
     await state.set_state(states.Track.number)
 
 @router.message(states.Track.number, F.text.len() == 8)
