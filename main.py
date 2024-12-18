@@ -7,7 +7,7 @@ from aiogram import F
 from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
-from kb import menu_builder
+from kb.menu_kb import menu_builder
 import text
 import handlers.order_h as order_h
 import handlers.track_h as track_h

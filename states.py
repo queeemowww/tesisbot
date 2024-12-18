@@ -5,13 +5,14 @@ class Order(StatesGroup):
     departure = State()
     to = State()
     pcs = State()
-    wheight = State()
+    weight = State()
     vol = State()
     planned_time = State()
     shipper_name = State()
     shipper_num = State()
     consignee_name = State()
     consignee_num = State()
+    send = State()
 
 class Track(StatesGroup):
     airport = State()

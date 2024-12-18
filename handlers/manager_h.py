@@ -4,7 +4,7 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ParseMode
 import states
-from kb import manager_builder
+from kb.manager_kb import manager_builder
 
 router = Router()
 

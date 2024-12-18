@@ -1,6 +1,6 @@
 from aiogram import types, Router
 from aiogram import F
-from kb import airport_track_builder,tracking_cancel_builder
+from kb.track_kb import airport_track_builder,tracking_cancel_builder
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ParseMode
@@ -54,7 +54,7 @@ async def track_4(message: types.message, state: FSMContext):
     tracks = await tracker.track_led(blank, number, airport)
     await message.answer(tracks, ParseMode.HTML)
 
-@router.callback_query(F.data == 'cancel_tracking')
+@router.callback_query(F.data == 'cancel_tracking', StateFilter(states.Track))
 async def cancel_track(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer('Трекинг отменен')
     await state.set_state(None)
