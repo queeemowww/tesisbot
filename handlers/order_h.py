@@ -11,6 +11,7 @@ from aiogram.enums import ParseMode
 from admin import admin_ids
 router = Router()
 import datetime
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 admin_id = admin_ids['Gleb']
 
@@ -91,6 +92,7 @@ async def order_13(callback: types.CallbackQuery, state: FSMContext):
 async def order14(callback: types.CallbackQuery, state: FSMContext):
     get_time()
     await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup())
+    remove_time()
     await state.set_state(Order.planned_time)
 
 @router.message(StateFilter(Order.planned_time))
@@ -100,7 +102,9 @@ async def order15(message: types.Message, state: FSMContext):
 
 @router.callback_query(F.data == "change", StateFilter(Order.planned_time))
 async def order_16(callback: types.CallbackQuery, state: FSMContext):
-     await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup())
+    get_time()
+    await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup())
+    remove_time()
 
 @router.callback_query(F.data == "continue", StateFilter(Order.planned_time))
 async def order17(callback: types.CallbackQuery, state: FSMContext):
@@ -120,6 +124,7 @@ async def order_19(callback: types.CallbackQuery, state: FSMContext):
 async def order20(callback: types.CallbackQuery, state: FSMContext):
     get_phone()
     await callback.message.answer('8/10 \- Введите *номер телефона отправителя*', reply_markup=order_phone_builder.as_markup())
+    remove_phone()
     await state.set_state(Order.shipper_num)
 
 @router.message(StateFilter(Order.shipper_num), F.text)
@@ -134,7 +139,9 @@ async def order21_1(message: types.Message, state: FSMContext):
 
 @router.callback_query(F.data == "change", StateFilter(Order.shipper_num))
 async def order_22(callback: types.CallbackQuery, state: FSMContext):
+     get_phone()
      await callback.message.answer('8/10 \- Введите *номер телефона отправителя*:')
+     remove_phone()
 
 @router.callback_query(F.data == "continue", StateFilter(Order.shipper_num))
 async def order23(callback: types.CallbackQuery, state: FSMContext):
@@ -182,7 +189,7 @@ async def order_check(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(StateFilter(Order.send))
 async def order_send(message: types.Message, state: FSMContext):
-    mes = '<code>1 - Аэропорт/город отправления: ' + order['Аэропорт/город отправления'] +'\n2 - Аэропорт/город прибытия: ' + order['Аэропорт/город прибытия'] +'\n3 - Количество мест: ' + order['Количество мест'] +'\n4 - Общий вес груза: ' + order['Общий вес груза'] +'\n5 - Общий объем груза: ' + order['Общий объем груза'] +'\n6 - Планируемая дата привоза на склад: ' + order['Планируемая дата привоза на склад'] +'\n7 - ФИО/Название организации отправителя: ' + order['ФИО/Название организации отправителя'] +'\n8 - Номер телефона отправителя: ' + order['Номер телефона отправителя'] +'\n9 - ФИО/Название организации получвтеля: ' + order['ФИО/Название организации получателя'] +'10 - Номер телефона получателя: ' + order['Номер телефона получателя'] + '</code>'
+    mes = '<code>1 - Аэропорт/город отправления: ' + order['Аэропорт/город отправления'] +'\n2 - Аэропорт/город прибытия: ' + order['Аэропорт/город прибытия'] +'\n3 - Количество мест: ' + order['Количество мест'] +'\n4 - Общий вес груза: ' + order['Общий вес груза'] +'\n5 - Общий объем груза: ' + order['Общий объем груза'] +'\n6 - Планируемая дата привоза на склад: ' + order['Планируемая дата привоза на склад'] +'\n7 - ФИО/Название организации отправителя: ' + order['ФИО/Название организации отправителя'] +'\n8 - Номер телефона отправителя: ' + order['Номер телефона отправителя'] +'\n9 - ФИО/Название организации получвтеля: ' + order['ФИО/Название организации получателя'] +'\n10 - Номер телефона получателя: ' + order['Номер телефона получателя'] + '</code>'
     await message.bot.send_message(chat_id=admin_ids['Gleb'], text = mes, parse_mode=ParseMode.HTML)
     await message.reply('Заявка успешно отправлена\! Наш сотрудник свяжется с Вами в рабочее время')
     await state.set_state(None)
@@ -199,6 +206,9 @@ def get_phone():
     )
     )
 
+def remove_phone():
+    order_phone_builder = ReplyKeyboardBuilder()
+
 def get_time():
     order_time_builder.add(types.KeyboardButton(
     text = datetime.date.today().strftime('%d-%m-%y') 
@@ -214,3 +224,6 @@ def get_time():
     text = (datetime.date.today() + datetime.timedelta(days=5)).strftime('%d-%m-%y') 
     )
     )
+
+def remove_time():
+    order_time_builder = ReplyKeyboardBuilder()

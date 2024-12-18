@@ -1,6 +1,7 @@
 from aiogram import types, Router
 from aiogram import F
 from text import led_lat, led_lon
+from aiogram.filters import Command
 
 router = Router()
 
