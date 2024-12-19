@@ -17,6 +17,8 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder
 admin_id = admin_ids['Gleb']
 
 order = {}
+time_builder = {}
+phone_builder = {}
 
 @router.callback_query(F.data == "order", StateFilter(None))
 async def order_1(callback: types.CallbackQuery, state: FSMContext):
@@ -102,9 +104,9 @@ async def order_13(callback: types.CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "continue", StateFilter(Order.vol))
 async def order14(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-    get_time()
+    get_time(message=callback.message)
     await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup( resize_keyboard=True))
-    remove_time()
+    del_time(message=callback.message)
     await state.set_state(Order.planned_time)
 
 @router.message(StateFilter(Order.planned_time))
@@ -115,10 +117,9 @@ async def order15(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.planned_time))
 async def order_16(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-    get_time()
+    get_time(message=callback.message)
     await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup( resize_keyboard=True))
-    remove_time()
-
+    del_time(message=callback.message)
 @router.callback_query(F.data == "continue", StateFilter(Order.planned_time))
 async def order17(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
@@ -138,9 +139,9 @@ async def order_19(callback: types.CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "continue", StateFilter(Order.shipper_name))
 async def order20(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-    get_phone()
+    get_phone(message=callback.message)
     await callback.message.answer('8/10 \- Введите *номер телефона отправителя*', reply_markup=order_phone_builder.as_markup())
-    remove_phone()
+    del_phone(message=callback.message)
     await state.set_state(Order.shipper_num)
 
 @router.message(StateFilter(Order.shipper_num), F.text)
@@ -156,9 +157,9 @@ async def order21_1(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.shipper_num))
 async def order_22(callback: types.CallbackQuery, state: FSMContext):
      await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-     get_phone()
+     get_phone(message=callback.message)
      await callback.message.answer('8/10 \- Введите *номер телефона отправителя*:')
-     remove_phone()
+     del_phone(message=callback.message)
 
 @router.callback_query(F.data == "continue", StateFilter(Order.shipper_num))
 async def order23(callback: types.CallbackQuery, state: FSMContext):
@@ -226,18 +227,18 @@ async def order_cancel(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer('Выберите действие', reply_markup=menu_builder.as_markup())
     await state.set_state(None)
 
-def get_phone():
-    order_phone_builder.add(types.KeyboardButton(
+def get_phone(message: types.Message):
+    phone_builder[message.chat.id] = order_phone_builder.add(types.KeyboardButton(
         text="Отправить номер телефона",
         request_contact=True
     )
     )
 
-def remove_phone():
-    order_phone_builder = ReplyKeyboardBuilder()
+def del_phone(message: types.Message):
+    del phone_builder[message.chat.id]
 
-def get_time():
-    order_time_builder.add(types.KeyboardButton(
+def get_time(message: types.Message):
+    time_builder[message.chat.id] = order_time_builder.add(types.KeyboardButton(
     text = datetime.date.today().strftime('%d-%m-%y') 
     )
     )
@@ -252,5 +253,5 @@ def get_time():
     )
     )
 
-def remove_time():
-    order_time_builder = ReplyKeyboardBuilder()
+def del_time(message: types.Message):
+    del time_builder[message.chat.id]
