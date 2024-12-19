@@ -1,0 +1,6 @@
+version: '3'
+services:
+  tesisbot:
+    build: ./tesis
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
