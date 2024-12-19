@@ -54,7 +54,7 @@ async def order_6(callback: types.CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "continue", StateFilter(Order.to))
 async def order7(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-    await callback.message.answer('3/10 \- Введите *количество мест*:', reply_markup=order_pcs_builder.as_markup())
+    await callback.message.answer('3/10 \- Введите *количество мест*:', reply_markup=order_pcs_builder.as_markup( resize_keyboard=True))
     await state.set_state(Order.pcs)
 
 @router.message(StateFilter(Order.pcs))
@@ -65,28 +65,28 @@ async def order8(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.pcs))
 async def order_9(callback: types.CallbackQuery, state: FSMContext):
      await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-     await callback.message.answer('3/10 \- Введите *количество мест*:', reply_markup=order_pcs_builder.as_markup())
+     await callback.message.answer('3/10 \- Введите *количество мест*:', reply_markup=order_pcs_builder.as_markup( resize_keyboard=True))
 
 @router.callback_query(F.data == "continue", StateFilter(Order.pcs),)
 async def order10(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-    await callback.message.answer('4/10 - Введите <b>общий вес груза(кг)</b>:', reply_markup=order_weight_builder.as_markup(), parse_mode=ParseMode.HTML)
+    await callback.message.answer('4/10 - Введите <b>общий вес груза(кг)</b>:', reply_markup=order_weight_builder.as_markup( resize_keyboard=True), parse_mode=ParseMode.HTML)
     await state.set_state(Order.weight)
 
 @router.message(StateFilter(Order.weight))
 async def order11(message: types.Message, state: FSMContext):
-    await message.answer('<code>Общий вес груза(кг): ' + message.text+ "</code>", reply_markup=order_change_builder.as_markup(), parse_mode=ParseMode.HTML)
+    await message.answer('<code>Общий вес груза(кг): ' + message.text+ "</code>", reply_markup=order_change_builder.as_markup( resize_keyboard=True), parse_mode=ParseMode.HTML)
     order[message.chat.id]['Общий вес груза'] = message.text
 
 @router.callback_query(F.data == "change", StateFilter(Order.weight))
 async def order_12(callback: types.CallbackQuery, state: FSMContext):
      await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-     await callback.message.answer('4/10 - Введите <b>общий вес груза(кг)</b>:', reply_markup=order_weight_builder.as_markup(), parse_mode=ParseMode.HTML)
+     await callback.message.answer('4/10 - Введите <b>общий вес груза(кг)</b>:', reply_markup=order_weight_builder.as_markup( resize_keyboard=True), parse_mode=ParseMode.HTML)
 
 @router.callback_query(F.data == "continue", StateFilter(Order.weight))
 async def order13(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-    await callback.message.answer('5/10 - Введите <b>общий объем груза(куб. м)</b>:', reply_markup=order_vol_builder.as_markup(),parse_mode=ParseMode.HTML)
+    await callback.message.answer('5/10 - Введите <b>общий объем груза(куб. м)</b>:', reply_markup=order_vol_builder.as_markup( resize_keyboard=True),parse_mode=ParseMode.HTML)
     await state.set_state(Order.vol)
 
 @router.message(StateFilter(Order.vol))
@@ -97,13 +97,13 @@ async def order12(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.vol))
 async def order_13(callback: types.CallbackQuery, state: FSMContext):
      await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-     await callback.message.answer('5/10 - Введите <b>общий объем груза(куб. м)</b>:', reply_markup=order_vol_builder.as_markup(), parse_mode=ParseMode.HTML)
+     await callback.message.answer('5/10 - Введите <b>общий объем груза(куб. м)</b>:', reply_markup=order_vol_builder.as_markup( resize_keyboard=True), parse_mode=ParseMode.HTML)
 
 @router.callback_query(F.data == "continue", StateFilter(Order.vol))
 async def order14(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
     get_time()
-    await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup())
+    await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup( resize_keyboard=True))
     remove_time()
     await state.set_state(Order.planned_time)
 
@@ -116,7 +116,7 @@ async def order15(message: types.Message, state: FSMContext):
 async def order_16(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
     get_time()
-    await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup())
+    await callback.message.answer('6/10 \- Введите *дату привоза груза на склад*:', reply_markup=order_time_builder.as_markup( resize_keyboard=True))
     remove_time()
 
 @router.callback_query(F.data == "continue", StateFilter(Order.planned_time))

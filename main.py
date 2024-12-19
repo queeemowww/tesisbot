@@ -26,7 +26,8 @@ class TesisBot():
         bot_token = os.getenv('BOT_TOKEN')
         logging.basicConfig(level=logging.INFO)
         self.bot = Bot(token=bot_token, default=DefaultBotProperties(
-                parse_mode=ParseMode.MARKDOWN_V2))
+                parse_mode=ParseMode.MARKDOWN_V2)
+                )
         self.dp = Dispatcher()
         self.dp.include_routers(order_h.router, track_h.router, manager_h.router, contacts_h.router)
 
