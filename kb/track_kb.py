@@ -8,7 +8,7 @@ cancel_track_btn = types.InlineKeyboardButton(
 
 airport_track_builder = InlineKeyboardBuilder()
 airport_track_builder.row(types.InlineKeyboardButton(
-    text = "Пулково 🇱🇪🇩",
+    text = "Пулково LED 🇷🇺",
     callback_data='LED'),
     width=1
     )

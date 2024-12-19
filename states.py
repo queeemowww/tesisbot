@@ -2,6 +2,7 @@ from aiogram.filters.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
 class Order(StatesGroup):
+    order_state = {}
     departure = State()
     to = State()
     pcs = State()
@@ -13,6 +14,7 @@ class Order(StatesGroup):
     consignee_name = State()
     consignee_num = State()
     send = State()
+    change = State()
 
 class Track(StatesGroup):
     airport = State()

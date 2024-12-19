@@ -4,19 +4,19 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from datetime import date
 order_departure_builder = ReplyKeyboardBuilder()
 order_departure_builder.add(types.KeyboardButton(
-    text = "Пулково 🇱🇪🇩")
+    text = "Пулково LED 🇷🇺")
 )
 
 order_departure_builder.add(types.KeyboardButton(
-    text = "Внуково 🇱🇪🇩")
+    text = "Внуково VKO 🇷🇺")
 )
 
 order_departure_builder.add(types.KeyboardButton(
-    text = "Шереметьево 🇱🇪🇩")
+    text = "Шереметьево SVO 🇷🇺")
 )
 
 order_departure_builder.add(types.KeyboardButton(
-    text = "Домодедово 🇱🇪🇩")
+    text = "Домодедово DME 🇷🇺")
 )
 order_departure_builder.adjust(1)
 
@@ -75,18 +75,30 @@ order_change_builder = InlineKeyboardBuilder()
 order_change_builder.row(types.InlineKeyboardButton(
     text = "Продолжить✅",
     callback_data='continue'),
-    width=1
+    width=3
 )
 
 order_change_builder.row(types.InlineKeyboardButton(
     text = "Изменить🔄",
     callback_data='change'),
-    width=1
+    width=3
 )
 
 order_change_builder.row(types.InlineKeyboardButton(
     text = "Отменить❌",
     callback_data='cancel'),
-    width=1
+    width=3
 )
 
+order_send_builder = InlineKeyboardBuilder()
+order_send_builder.row(types.InlineKeyboardButton(
+    text = "Отправить✅",
+    callback_data='send'),
+    width=2
+)
+
+order_send_builder.row(types.InlineKeyboardButton(
+    text = "Отменить❌",
+    callback_data='cancel'),
+    width=2
+)

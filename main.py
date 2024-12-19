@@ -45,7 +45,6 @@ class TesisBot():
                 "Выберите действие",
                 reply_markup=menu_builder.as_markup()
             )
-        
         "Очистить контекст состояний"
         
         @self.dp.message(Command('clear'))
