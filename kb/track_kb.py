@@ -26,3 +26,18 @@ manager_builder.add(types.InlineKeyboardButton(
     text='Заверщить разговор ❌',
     callback_data='stop_manager')
 )
+
+
+awb_blank_builder = ReplyKeyboardBuilder()
+
+awb_blank_builder.add(types.KeyboardButton(
+    text = "555"
+)
+)
+awb_blank_builder.add(types.KeyboardButton(
+    text = "421"
+))
+
+awb_blank_builder.add(types.KeyboardButton(
+    text = "216"
+))
