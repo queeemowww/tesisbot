@@ -72,7 +72,7 @@ async def order_9(callback: types.CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "continue", StateFilter(Order.pcs),)
 async def order10(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
-    await callback.message.answer('4/10 - Введите <b><i>Введите общий вес груза(кг)</i></b>:', reply_markup=order_weight_builder.as_markup( resize_keyboard=True), parse_mode=ParseMode.HTML)
+    await callback.message.answer('4/10 - <b><i>Введите общий вес груза(кг)</i></b>:', reply_markup=order_weight_builder.as_markup( resize_keyboard=True), parse_mode=ParseMode.HTML)
     await state.set_state(Order.weight)
 
 @router.message(StateFilter(Order.weight))
