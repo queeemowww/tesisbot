@@ -228,7 +228,7 @@ async def order_cancel(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(None)
 
 def get_phone(message: types.Message):
-    phone_builder[message.chat.id]= order_phone_builder
+    phone_builder[message.chat.id]= ReplyKeyboardBuilder()
     phone_builder[message.chat.id].add(types.KeyboardButton(
         text="Отправить номер телефона",
         request_contact=True
@@ -236,18 +236,19 @@ def get_phone(message: types.Message):
     )
 
 def get_time(message: types.Message):
-    time_builder[message.chat.id] = order_time_builder
+    time_builder[message.chat.id] = ReplyKeyboardBuilder()
     time_builder[message.chat.id].add(types.KeyboardButton(
     text = datetime.date.today().strftime('%d-%m-%y') 
     )
     )
 
-    order_time_builder.add(types.KeyboardButton(
+    time_builder[message.chat.id].add(types.KeyboardButton(
     text = (datetime.date.today() + datetime.timedelta(days=1)).strftime('%d-%m-%y') 
     )
     )
 
-    order_time_builder.add(types.KeyboardButton(
+    time_builder[message.chat.id].add(types.KeyboardButton(
     text = (datetime.date.today() + datetime.timedelta(days=5)).strftime('%d-%m-%y') 
     )
     )
+    time_builder[message.chat.id].adjust(1)
