@@ -1,0 +1,5 @@
+killall python3
+source venv/bin/activate
+nohup python3 main.py 
+git pull https://github.com/queeemowww/tesisbot
+sudo -u postgres psql

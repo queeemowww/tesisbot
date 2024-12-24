@@ -7,6 +7,8 @@ from aiogram import F
 from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
+from db import Db
+
 from kb.menu_kb import menu_builder
 import text
 import handlers.order_h as order_h
@@ -30,11 +32,13 @@ class TesisBot():
                 )
         self.dp = Dispatcher()
         self.dp.include_routers(order_h.router, track_h.router, manager_h.router, contacts_h.router)
+        self.database = Db()
 
     async def logic(self):
         # Хэндлер на команду /start
         @self.dp.message(Command("start"))
         async def cmd_start(message: types.Message):
+            self.database.insert_user(message.chat.id, message.chat.username)
             await message.answer(
                 text.starting_text,
                 reply_markup=menu_builder.as_markup()
