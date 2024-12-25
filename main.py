@@ -38,20 +38,25 @@ class TesisBot():
         # Хэндлер на команду /start
         @self.dp.message(Command("start"))
         async def cmd_start(message: types.Message):
-            self.database.insert_user(message.chat.id, message.chat.username)
+            self.database.insert_user(message.chat.id, message.chat.username, message.chat.first_name, message.chat.last_name)
+            self.database.cursor.close()
             await message.answer(
                 text.starting_text,
                 reply_markup=menu_builder.as_markup()
             )
 
-        @self.dp.message(StateFilter(None), F.text.lower() != 'нюся')
+        @self.dp.message(StateFilter(None), F.text.lower() != '/orders')
         async def cmd_menu(message: types.Message):
             await message.answer(
                 "Выберите действие",
                 reply_markup=menu_builder.as_markup()
             )
-        "Очистить контекст состояний"
-        
+
+        # @self.dp.message(Command("orders"))
+        # async def order_get(message: types.Message):
+        #     await message.answer("suka")
+        #     self.database.select_order(str(message.chat.id))
+                
         @self.dp.message(Command('clear'))
         async def test(message: types.Message, state: FSMContext):
             await state.set_state(None)
