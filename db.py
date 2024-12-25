@@ -33,14 +33,14 @@ class Db():
                     date varchar(50) not null,
                     departure varchar(20) not null,
                     destination varchar(20) not null, 
-                    pieces varchar(3) not null,
-                    weight varchar(10) not null,
-                    volume varchar(5) not null,
-                    warehouse_date varchar(10) not null,
+                    pieces varchar(20) not null,
+                    weight varchar(20) not null,
+                    volume varchar(20) not null,
+                    warehouse_date varchar(20) not null,
                     shipper_name varchar(100) not null,
-                    shipper_phone varchar(15) not null,
+                    shipper_phone varchar(20) not null,
                     consignee_name varchar(100) not null,
-                    consignee_phone varchar(15) not null,
+                    consignee_phone varchar(20) not null,
                     user_id varchar references customers(user_id)
                             );
                             """)
