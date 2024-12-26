@@ -252,7 +252,7 @@ async def order_cancel(callback: types.CallbackQuery, state: FSMContext):
 #     )
 
 def get_previous_mrkp(user_id, name: str):
-    return types.ReplyKeyboardMarkup(keyboard=[[types.KeyboardButton(text=i) for i in database.select_order(user_id, name)]])
+    return types.ReplyKeyboardMarkup(keyboard=[[types.KeyboardButton(text=i) for i in database.select_order(user_id, name)]], resize_keyboard=True)
 
 def get_time(message: types.Message):
     time_builder[message.chat.id] = ReplyKeyboardBuilder()
