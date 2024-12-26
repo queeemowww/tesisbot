@@ -2,78 +2,91 @@ from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 from datetime import date
-# order_departure_builder = ReplyKeyboardBuilder()
-# order_departure_builder.add(types.KeyboardButton(
-#     text = "Пулково LED 🇷🇺")
-# )
 
-# order_departure_builder.add(types.KeyboardButton(
-#     text = "Внуково VKO 🇷🇺")
-# )
+# def kb_builder(message: types.Message, departure_builder, dest):
+#     departure_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     destination_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     pieces_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     weight_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     volume_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     shipper_name_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     shipper_phone_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     consignee_name_builder[message.chat.id] = ReplyKeyboardBuilder()
+#     consignee_phone_builder[message.chat.id] = ReplyKeyboardBuilder()
 
-# order_departure_builder.add(types.KeyboardButton(
-#     text = "Шереметьево SVO 🇷🇺")
-# )
+departure_buttons = []
+departure_buttons.append(types.KeyboardButton(
+    text = "Пулково LED 🇷🇺")
+)
 
-# order_departure_builder.add(types.KeyboardButton(
-#     text = "Домодедово DME 🇷🇺")
-# )
-# order_departure_builder.adjust(1)
+departure_buttons.append(types.KeyboardButton(
+    text = "Внуково VKO 🇷🇺")
+)
 
-# order_pcs_builder = ReplyKeyboardBuilder()
-# order_pcs_builder.add(types.KeyboardButton(
-#     text = "1")
-# )
+departure_buttons.append(types.KeyboardButton(
+    text = "Шереметьево SVO 🇷🇺")
+)
 
-# order_pcs_builder.add(types.KeyboardButton(
-#     text = "5")
-# )
+destination_buttons = []
+destination_buttons.append(types.KeyboardButton(
+    text = "Пулково LED 🇷🇺")
+)
 
-# order_pcs_builder.add(types.KeyboardButton(
-#     text = "10")
-# )
-# order_pcs_builder.adjust(3)
+destination_buttons.append(types.KeyboardButton(
+    text = "Внуково VKO 🇷🇺")
+)
 
-# order_weight_builder = ReplyKeyboardBuilder()
-# order_weight_builder.add(types.KeyboardButton(
-#     text = "5")
-# )
+destination_buttons.append(types.KeyboardButton(
+    text = "Шереметьево SVO 🇷🇺")
+)
 
-# order_weight_builder.add(types.KeyboardButton(
-#     text = "25")
-# )
+pieces_buttons = []
+pieces_buttons.append(types.KeyboardButton(
+    text = "1")
+)
 
-# order_weight_builder.add(types.KeyboardButton(
-#     text = "50")
-# )
-# order_weight_builder.adjust(3)
+pieces_buttons.append(types.KeyboardButton(
+    text = "5")
+)
 
-# order_vol_builder = ReplyKeyboardBuilder()
-# order_vol_builder.add(types.KeyboardButton(
-#     text = "0.05")
-# )
+pieces_buttons.append(types.KeyboardButton(
+    text = "10")
+)
 
-# order_vol_builder.add(types.KeyboardButton(
-#     text = "0.1")
-# )
+weight_buttons = []
+weight_buttons.append(types.KeyboardButton(
+    text = "5")
+)
 
-# order_vol_builder.add(types.KeyboardButton(
-#     text = "0.5")
-# )
-# order_vol_builder.adjust(3)
+weight_buttons.append(types.KeyboardButton(
+    text = "25")
+)
+
+weight_buttons.append(types.KeyboardButton(
+    text = "50")
+)
+
+volume_buttons = []
+volume_buttons.append(types.KeyboardButton(
+    text = "0.05")
+)
+
+volume_buttons.append(types.KeyboardButton(
+    text = "0.1")
+)
+
+volume_buttons.append(types.KeyboardButton(
+    text = "0.5")
+)
+
+shipper_name_buttons = []
+shipper_phone_buttons = []
+consignee_name_buttons = []
+consignee_phone_buttons = []
 
 order_time_builder = ReplyKeyboardBuilder()
 order_time_builder.adjust(1)
 
-# order_departure_builder = ReplyKeyboardBuilder()
-# order_destination_builder = ReplyKeyboardBuilder()
-# order_pieces_builder = ReplyKeyboardBuilder()
-# order_weight_builder = ReplyKeyboardBuilder()
-# order_volume_builder = ReplyKeyboardBuilder()
-# order_shipper_name_builder = ReplyKeyboardBuilder()
-# order_shipper_phone_builder = ReplyKeyboardBuilder()
-# order_consignee_name_builder = ReplyKeyboardBuilder()
-# order_consignee_phone_builder = ReplyKeyboardBuilder()
 
 order_fio_builder = ReplyKeyboardBuilder()
 order_fio_builder.adjust(1)
