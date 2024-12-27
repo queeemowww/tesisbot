@@ -3,17 +3,6 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 from datetime import date
 
-# def kb_builder(message: types.Message, departure_builder, dest):
-#     departure_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     destination_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     pieces_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     weight_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     volume_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     shipper_name_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     shipper_phone_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     consignee_name_builder[message.chat.id] = ReplyKeyboardBuilder()
-#     consignee_phone_builder[message.chat.id] = ReplyKeyboardBuilder()
-
 departure_buttons = []
 departure_buttons.append(types.KeyboardButton(
     text = "Пулково LED 🇷🇺")

@@ -80,7 +80,7 @@ class Db():
             'consignee_name': 10,
             'consignee_phone': 11
         }
-        self.cursor.execute(f"""select * from orders where (user_id) = '{user_id}' ORDER BY date DESC limit 3;""")
+        self.cursor.execute(f"""select distinct {name} from orders where (user_id) = '{user_id}' ORDER BY date DESC limit 3;""")
         for el in self.cursor.fetchall():
             order_list.append(el[ordernum[name]])
         return order_list
