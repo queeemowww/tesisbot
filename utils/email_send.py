@@ -8,7 +8,6 @@ load_dotenv()
 EMAIL_LOGIN = os.getenv('EMAIL_LOGIN')
 GOOGLE_APPPASS = os.getenv("GOOGLE_APPPASS")
 EMAIL_RECEPIENT = os.getenv("EMAIL_RECEPIENT")
-EMAIL_RECEPIENT = 'glebkuimov@gmail.com'
 
 
 class Send_order():
