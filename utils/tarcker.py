@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import requests
+import asyncio
+import time
 
 class Tracker():
     def __init__(self):
@@ -28,25 +30,31 @@ class Tracker():
         awb_blank_elem.send_keys(awb_blank)
         awb_num_elem.send_keys(awb_num + Keys.RETURN)
         button_elem.click()
+        time.sleep(.5)
 
         try:
-            route_elem = self.browser.find_element(By.ID, 'P1_APW_')
+            route_elem = self.browser.find_element(By.CSS_SELECTOR, '[class = "display_only apex-item-display-only"]')
             report_els = self.browser.find_element(By.CSS_SELECTOR, '[class = "uReport uReportStandard"]')
             state_els = report_els.find_elements(By.TAG_NAME, 'tr')
-        except:
-            self.browser.get(url)
+            states = str('<b>' + route_elem.text + '</b>')
+            for i in range(1, len(state_els)):
+                states = states + '\n' + '<code>' +  str(i) + '. ' + state_els[i].text + '</code> '
+            # self.browser.close()
+            return states
+        except Exception as e:
+            print(e)
             return 'Не удалось найти накладную с номером ' + '<code>' + awb_blank + '-' + awb_num + '</code>'
-        # finally:
-        #     self.browser.close()
-        
-        states = str('<b>' + route_elem.text + '</b>')
-        for i in range(1, len(state_els)):
-            states = states + '\n' + '<code>' +  str(i) + '. ' + state_els[i].text + '</code> '
-        # self.browser.close()
-        return states
+        finally:
+            self.browser.get(url)
+
+    async def track_svo(self):
+        pass
 
 # async def main():
 #     tr = Tracker()
 #     l = await tr.track_led('216', '77131843')
-#     print(l)
+#     m = await tr.track_led('000', '00000000')
+#     # print(l)
+#     print(m)
+    
 # asyncio.run(main())
