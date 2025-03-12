@@ -51,7 +51,7 @@ class TesisBot():
         async def cmd_menu(message: types.Message):
             await message.delete()
             prev = await message.answer(
-                'Выберите действие\. _для сброса переписки введите "/clear"',
+                'Выберите действие\. _для сброса переписки введите_ "/clear"',
                 reply_markup=menu_builder.as_markup()
             )
             try:
