@@ -21,7 +21,7 @@ from aiogram.fsm.context import FSMContext
 import os
 
 load_dotenv()
-
+global prev
 class TesisBot():
     tracker = None
     def __init__(self):
@@ -36,21 +36,28 @@ class TesisBot():
 
     async def logic(self):
         # Хэндлер на команду /start
+
         @self.dp.message(Command("start"))
         async def cmd_start(message: types.Message):
+            global prev
             self.database.insert_user(message.chat.id, message.chat.username, message.chat.first_name, message.chat.last_name)
             self.database.cursor.close()
-            await message.answer(
+            prev = await message.answer(
                 text.starting_text,
                 reply_markup=menu_builder.as_markup()
             )
 
         @self.dp.message(StateFilter(None), F.text.lower() != '/orders')
         async def cmd_menu(message: types.Message):
-            await message.answer(
-                "Выберите действие",
+            await message.delete()
+            prev = await message.answer(
+                'Выберите действие\. _для сброса переписки введите "/clear"',
                 reply_markup=menu_builder.as_markup()
             )
+            try:
+                await prev.delete()
+            except:
+                pass
 
         # @self.dp.message(Command("orders"))
         # async def order_get(message: types.Message):
