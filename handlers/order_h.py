@@ -276,7 +276,7 @@ async def order_send(callback: types.callback_query, state: FSMContext):
     mes = '1 - Аэропорт/город отправления: ' + order[callback.message.chat.id]['Аэропорт/город отправления'] +'\n2 - Аэропорт/город прибытия: ' + order[callback.message.chat.id]['Аэропорт/город прибытия'] +'\n3 - Количество мест: ' + order[callback.message.chat.id]['Количество мест'] +'\n4 - Общий вес груза: ' + order[callback.message.chat.id]['Общий вес груза'] +'\n5 - Общий объем груза: ' + order[callback.message.chat.id]['Общий объем груза'] +'\n6 - Планируемая дата привоза на склад: ' + order[callback.message.chat.id]['Планируемая дата привоза на склад'] +'\n7 - ФИО/Название организации отправителя: ' + order[callback.message.chat.id]['ФИО/Название организации отправителя'] +'\n8 - Номер телефона отправителя: ' + order[callback.message.chat.id]['Номер телефона отправителя'] +'\n9 - ФИО/Название организации получвтеля: ' + order[callback.message.chat.id]['ФИО/Название организации получателя'] +'\n10 - Номер телефона получателя: ' + order[callback.message.chat.id]['Номер телефона получателя']
     await callback.message.bot.send_message(chat_id=admin_ids['Gleb'], text = mes, parse_mode=ParseMode.HTML)
     await callback.message.bot.send_message(chat_id=admin_ids['operator'], text = mes, parse_mode=ParseMode.HTML)
-    email_send.send_mail(message=mes)
+    await email_send.send_mail(message=mes)
     # await callback.message.bot.send_message(chat_id=admin_ids['operator'], text = mes, parse_mode=ParseMode.HTML)
     # await callback.message.delete_reply_markup()
     await callback.message.reply('<i>Заявка успешно отправлена! Наш сотрудник свяжется с Вами в рабочее время</i>', parse_mode = ParseMode.HTML, reply_markup = menu_builder.as_markup())

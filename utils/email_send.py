@@ -20,7 +20,7 @@ class Send_order():
         self.smtp.login(EMAIL_LOGIN, GOOGLE_APPPASS)
         # smtp.quit()
     
-    def send_mail(self, message):
+    async def send_mail(self, message):
         msg = MIMEText(message)
         msg['Subject'] = 'TG Запрос доставки'
         msg['From'] = EMAIL_LOGIN
