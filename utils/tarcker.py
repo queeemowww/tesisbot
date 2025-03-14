@@ -59,7 +59,7 @@ class Tracker():
         awb_blank_elem.send_keys(awb_blank)
         awb_num_elem.send_keys(awb_num + Keys.RETURN)
 
-        time.sleep(.5)
+        time.sleep(2)
         try:
             state_els = self.browser.find_elements(By.CSS_SELECTOR, '[id = "status"]')
             status = state_els[0].find_elements(By.TAG_NAME, "tr")
