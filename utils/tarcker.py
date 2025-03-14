@@ -17,7 +17,7 @@ class Tracker():
 
     async def track_led(self, awb_blank, awb_num, airport = None):
         url = 'https://mirazh.pulkovo-cargo.ru/pls/apex/f?p=729:1::::::'
-        if requests.get(url).status_code != 200:
+        if requests.get(url).status_code != 200 or (len(self.browser.find_elements(By.TAG_NAME, "center")) > 0 and self.browser.find_elements(By.TAG_NAME, "center")[0].text == "502 Bad Gateway"):
             return 'В данный момент трекинг недоступен. Попробуйте позднее'
 
         # self.browser.execute_script(f'''window.open("{url}","_blank");''')
@@ -45,7 +45,7 @@ class Tracker():
             print(e)
             return 'Не удалось найти накладную с номером ' + '<code>' + awb_blank + '-' + awb_num + '</code>'
         finally:
-            self.browser.get(url)
+            self.browser.close()
 
     async def track_svo(self):
         pass

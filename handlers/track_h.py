@@ -13,9 +13,12 @@ awb_num = FSInputFile('./img/awb_num.png')
 
 from utils.tarcker import Tracker
 
-tracker = Tracker()
-todelete = []
+tracker = {}
+todelete = {}
 router = Router()
+tracks = {}
+blank = {}
+number = {}
 
 @router.callback_query(F.data == "track", StateFilter(None))
 async def track_1(callback: types.CallbackQuery, state: FSMContext):
@@ -35,33 +38,36 @@ async def track_2(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     global airport
     airport = callback.data
-    a = await callback.message.answer_photo(photo = awb_blank, caption = 'Введите бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
+    todelete[callback.message.chat.id] = await callback.message.answer_photo(photo = awb_blank, caption = 'Введите бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
                                   reply_markup= tracking_cancel_builder.as_markup())
-    todelete.append(a)
     await state.set_state(states.Track.blank)
 
 @router.message(states.Track.blank, F.text.len() == 3)
 async def track_3(message: types.Message, state: FSMContext):
-    global blank
-    blank = message.text
+    blank[message.chat.id] = message.text
     await message.delete()
-    a = await message.answer_photo(photo = awb_num, caption = 'Введите номер ГАН \(8 цифр, например\: \.\.\.\-*12345678*\)', 
+    await todelete[message.chat.id].delete()
+    del todelete[message.chat.id]
+    todelete[message.chat.id] = await message.answer_photo(photo = awb_num, caption = 'Введите номер ГАН \(8 цифр, например\: \.\.\.\-*12345678*\)', 
                                   reply_markup= tracking_cancel_builder.as_markup())
-    await todelete[-1].delete()
-    todelete.append(a)
     await state.set_state(states.Track.number)
 
 @router.message(states.Track.number, F.text.len() == 8)
 async def track_4(message: types.Message, state: FSMContext):
-    global number
-    number = message.text
-    await todelete[-1].delete()
+    number[message.chat.id] = message.text
+    await todelete[message.chat.id].delete()
+    del todelete[message.chat.id]
     await message.delete()
     await state.set_state(None)
-    mes = await message.answer("Проверяю статус груза\. Пожалуйста, ожидайте")
-    tracks = await tracker.track_led(blank, number, airport)
-    await message.answer(tracks, ParseMode.HTML, reply_markup=menu_builder.as_markup())
-    await mes.delete()
+    todelete[message.chat.id] = await message.answer("Проверяю статус груза\. Пожалуйста, ожидайте")
+    tracker[message.chat.id] = Tracker()
+    tracks[message.chat.id] = await tracker[message.chat.id].track_led(blank[message.chat.id], number[message.chat.id], airport)
+    await message.answer(tracks[message.chat.id], ParseMode.HTML, reply_markup=menu_builder.as_markup())
+    await todelete[message.chat.id].delete()
+    del blank[message.chat.id]
+    del number[message.chat.id]
+    del tracker[message.chat.id]
+    del tracks[message.chat.id]
 
 @router.callback_query(F.data == 'cancel_tracking', StateFilter(states.Track))
 async def cancel_track(callback: types.CallbackQuery, state: FSMContext):
@@ -71,18 +77,18 @@ async def cancel_track(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(states.Track.blank)
 async def track_2_incorrect(message: types.Message):
-    await todelete[-1].delete()
-    a = await message.answer('Введите *правильный* бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
+    await todelete[message.chat.id].delete()
+    del todelete[message.chat.id]
+    todelete[message.chat.id] = await message.answer('Введите *правильный* бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
                          reply_markup= tracking_cancel_builder.as_markup())
-    todelete.append(a)
     await message.delete()
 
 @router.message(states.Track.number)
 async def track_3_incorrect(message: types.Message):
-    await todelete[-1].delete()
-    a = await message.answer('Введите *правильный* номер ГАН \(8 цифр, например\: \.\.\.\-*12345678*\)', 
+    await todelete[message.chat.id].delete()
+    del todelete[message.chat.id]
+    todelete[message.chat.id] = await message.answer('Введите *правильный* номер ГАН \(8 цифр, например\: \.\.\.\-*12345678*\)', 
                          reply_markup= tracking_cancel_builder.as_markup())
-    todelete.append(a)
     await message.delete()
 
 
