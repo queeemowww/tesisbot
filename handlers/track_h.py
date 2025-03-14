@@ -19,6 +19,7 @@ router = Router()
 tracks = {}
 blank = {}
 number = {}
+airport = {}
 
 @router.callback_query(F.data == "track", StateFilter(None))
 async def track_1(callback: types.CallbackQuery, state: FSMContext):
@@ -36,8 +37,15 @@ async def track_1_1(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "LED", states.Track.airport)
 async def track_2(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    global airport
-    airport = callback.data
+    airport[callback.message.chat.id] = callback.data
+    todelete[callback.message.chat.id] = await callback.message.answer_photo(photo = awb_blank, caption = 'Введите бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
+                                  reply_markup= tracking_cancel_builder.as_markup())
+    await state.set_state(states.Track.blank)
+
+@router.callback_query(F.data == "SVO", states.Track.airport)
+async def track_2_1(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.delete()
+    airport[callback.message.chat.id] = callback.data
     todelete[callback.message.chat.id] = await callback.message.answer_photo(photo = awb_blank, caption = 'Введите бланк ГАН \(первые три цифры, например\: *555*\-\.\.\.\.\.\)', 
                                   reply_markup= tracking_cancel_builder.as_markup())
     await state.set_state(states.Track.blank)
@@ -61,7 +69,12 @@ async def track_4(message: types.Message, state: FSMContext):
     await state.set_state(None)
     todelete[message.chat.id] = await message.answer("Проверяю статус груза\. Пожалуйста, ожидайте")
     tracker[message.chat.id] = Tracker()
-    tracks[message.chat.id] = await tracker[message.chat.id].track_led(blank[message.chat.id], number[message.chat.id], airport)
+    match airport[message.chat.id]:
+        case 'LED':
+            tracks[message.chat.id] = await tracker[message.chat.id].track_led(blank[message.chat.id], number[message.chat.id])
+        case 'SVO':
+            tracks[message.chat.id] = await tracker[message.chat.id].track_svo(blank[message.chat.id], number[message.chat.id])
+    
     await message.answer(tracks[message.chat.id], ParseMode.HTML, reply_markup=menu_builder.as_markup())
     await todelete[message.chat.id].delete()
     del blank[message.chat.id]

@@ -12,6 +12,12 @@ airport_track_builder.row(types.InlineKeyboardButton(
     callback_data='LED'),
     width=1
     )
+airport_track_builder.row(types.InlineKeyboardButton(
+    text = "Шереметьево SVO 🇷🇺",
+    callback_data='SVO'),
+    width=1
+    )
+
 airport_track_builder.row(
         cancel_track_btn
         )
