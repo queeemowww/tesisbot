@@ -38,8 +38,7 @@ class Tracker():
             state_els = report_els.find_elements(By.TAG_NAME, 'tr')
             states = str('<b>' + route_elem.text + '</b>')
             for i in range(1, len(state_els)):
-                states = states + '\n' + '<code>' +  str(i) + '. ' + state_els[i].text + '</code> '
-            # self.browser.close()
+                states = states + '\n' + '<code>' +  str(i) + '. ' + state_els[i].text + '</code>'
             return states
         except Exception as e:
             print(e)
