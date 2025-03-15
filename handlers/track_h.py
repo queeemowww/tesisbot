@@ -69,13 +69,16 @@ async def track_4(message: types.Message, state: FSMContext):
     await state.set_state(None)
     todelete[message.chat.id] = await message.answer("Проверяю статус груза\. Пожалуйста, ожидайте")
     tracker[message.chat.id] = Tracker()
+
     match airport[message.chat.id]:
         case 'LED':
             tracks[message.chat.id] = await tracker[message.chat.id].track_led(blank[message.chat.id], number[message.chat.id])
         case 'SVO':
             tracks[message.chat.id] = await tracker[message.chat.id].track_svo(blank[message.chat.id], number[message.chat.id])
-    
-    await message.answer(tracks[message.chat.id], ParseMode.HTML, reply_markup=menu_builder.as_markup())
+    try:
+        await message.answer(tracks[message.chat.id], ParseMode.HTML, reply_markup=menu_builder.as_markup())
+    except Exception as e:
+        await message.answer('Не удалось найти накладную с номером ' + '<code>' + blank[message.chat.id] + '-' + number[message.chat.id] + '</code>', ParseMode.HTML, reply_markup=menu_builder.as_markup())
     await todelete[message.chat.id].delete()
     del blank[message.chat.id]
     del number[message.chat.id]

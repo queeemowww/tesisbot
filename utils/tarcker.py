@@ -32,19 +32,14 @@ class Tracker():
         button_elem.click()
         time.sleep(.5)
 
-        try:
-            route_elem = self.browser.find_element(By.CSS_SELECTOR, '[class = "display_only apex-item-display-only"]')
-            report_els = self.browser.find_element(By.CSS_SELECTOR, '[class = "uReport uReportStandard"]')
-            state_els = report_els.find_elements(By.TAG_NAME, 'tr')
-            states = str('<b>' + route_elem.text + '</b>')
-            for i in range(1, len(state_els)):
-                states = states + '\n' + '<code>' +  str(i) + '. ' + state_els[i].text + '</code>'
-            return states
-        except Exception as e:
-            print(e)
-            return 'Не удалось найти накладную с номером ' + '<code>' + awb_blank + '-' + awb_num + '</code>'
-        finally:
-            self.browser.close()
+        route_elem = self.browser.find_element(By.CSS_SELECTOR, '[class = "display_only apex-item-display-only"]')
+        report_els = self.browser.find_element(By.CSS_SELECTOR, '[class = "uReport uReportStandard"]')
+        state_els = report_els.find_elements(By.TAG_NAME, 'tr')
+        states = str('<b>' + route_elem.text + '</b>')
+        for i in range(1, len(state_els)):
+            states = states + '\n' + '<code>' +  str(i) + '. ' + state_els[i].text + '</code>'
+        self.browser.close()
+        return states
 
     async def track_svo(self, awb_blank = None, awb_num = None):
         url = 'https://www.moscow-cargo.com/'
@@ -60,18 +55,13 @@ class Tracker():
         awb_num_elem.send_keys(awb_num + Keys.RETURN)
 
         time.sleep(2)
-        try:
-            state_els = self.browser.find_elements(By.CSS_SELECTOR, '[id = "status"]')
-            status = state_els[0].find_elements(By.TAG_NAME, "tr")
-            states = ''
-            for i in range(len(state_els[0].find_elements(By.TAG_NAME, "tr"))):
-                states = states + '\n' + '<code>' +  str(i + 1) + '. ' + status[i].text + '</code>'
-            return states
-        except Exception as e:
-            print(e)
-            return 'Не удалось найти накладную с номером ' + '<code>' + awb_blank + '-' + awb_num + '</code>'
-        finally:
-            self.browser.close()
+        state_els = self.browser.find_elements(By.CSS_SELECTOR, '[id = "status"]')
+        status = state_els[0].find_elements(By.TAG_NAME, "tr")
+        states = str('<b>' + awb_blank + "-" + awb_num + '</b>')
+        for i in range(len(state_els[0].find_elements(By.TAG_NAME, "tr"))):
+            states = states + '\n' + '<code>' +  str(i + 1) + '. ' + status[i].text + '</code>'
+        self.browser.close()
+        return states
 
 # async def main():
 #     tr = Tracker()
