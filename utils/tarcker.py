@@ -57,6 +57,8 @@ class Tracker():
         time.sleep(2)
         state_els = self.browser.find_elements(By.CSS_SELECTOR, '[id = "status"]')
         status = state_els[0].find_elements(By.TAG_NAME, "tr")
+        if state_els[0].text == "":
+            return ""
         states = str('<b>' + awb_blank + "-" + awb_num + '</b>')
         for i in range(len(state_els[0].find_elements(By.TAG_NAME, "tr"))):
             states = states + '\n' + '<code>' +  str(i + 1) + '. ' + status[i].text + '</code>'
