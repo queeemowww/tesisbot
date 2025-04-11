@@ -1,4 +1,5 @@
 import asyncpg
+import asyncio
 
 class Db:
     def __init__(self, dsn="postgresql://tesis:1405@localhost/tesisbot"):
@@ -76,34 +77,51 @@ class Db:
 
     async def select_order(self, user_id, name):
         order_list = []
-        order_column_map = {
-            'departure': 'departure',
-            'destination': 'destination',
-            'pieces': 'pieces',
-            'weight': 'weight',
-            'volume': 'volume',
-            'warehouse_date': 'warehouse_date',
-            'shipper_name': 'shipper_name',
-            'shipper_phone': 'shipper_phone',
-            'consignee_name': 'consignee_name',
-            'consignee_phone': 'consignee_phone'
+        ordernum = {
+            'departure': 2,
+            'destination': 3,
+            'pieces': 4,
+            'weight': 5,
+            'volume' : 6,
+            'warehouse_date': 7,
+            'shipper_name': 8,
+            'shipper_phone': 9,
+            'consignee_name': 10,
+            'consignee_phone': 11
         }
-
-        column = order_column_map.get(name)
-        if column is None:
-            raise ValueError(f"Unknown field: {name}")
-
         try:
             async with self.pool.acquire() as conn:
-                rows = await conn.fetch(f"""
-                    SELECT DISTINCT {column}
-                    FROM orders
-                    WHERE user_id = $1
-                    ORDER BY date DESC
-                    LIMIT 3;
-                """, str(user_id))
-                order_list = [r[column] for r in rows]
+                for el in await conn.fetch("""select distinct * from orders where (user_id) = '{user_id}' ORDER BY date DESC limit 3;"""):
+                    order_list.append(el[ordernum[name]])
                 return order_list
         except Exception as e:
             print(f"[select_order error] {e}")
             return []
+
+        # column = order_column_map.get(name)
+        # if column is None:
+        #     raise ValueError(f"Unknown field: {name}")
+
+        # try:
+        #     async with self.pool.acquire() as conn:
+        #         rows = await conn.fetch(f"""
+        #             SELECT DISTINCT {column}
+        #             FROM orders
+        #             WHERE user_id = $1
+        #             ORDER BY date DESC
+        #             LIMIT 3;
+        #         """, str(user_id))
+        #         order_list = [r[column] for r in rows]
+        #         return order_list
+        # except Exception as e:
+        #     print(f"[select_order error] {e}")
+        #     return []
+
+
+# if __name__ == '__main__':
+#     db = Db()
+#     SELECT DISTINCT on (departure)
+#                     FROM (orders)
+#                     WHERE user_id = '1016604339'
+#                     ORDER BY date DESC
+#                     LIMIT 3;

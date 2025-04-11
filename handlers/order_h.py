@@ -28,7 +28,7 @@ prev = {}
 async def order_1(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     order[callback.message.chat.id] = {}
-    prev[callback.message.chat.id] = await callback.message.answer('1️⃣ \- *_Введите аэропорт/город отправления_*', reply_markup=get_previous_mrkp(callback.message.chat.id, 'departure'))
+    prev[callback.message.chat.id] = await callback.message.answer('1️⃣ \- *_Введите аэропорт/город отправления_*', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'departure'))
     await state.set_state(Order.departure)
 
 @router.message(StateFilter(Order.departure))
@@ -42,12 +42,12 @@ async def order_2(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.departure))
 async def order_3(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    prev[callback.message.chat.id] = await callback.message.answer('1️⃣ \- *_Введите аэропорт/город отправления_*',reply_markup=get_previous_mrkp(callback.message.chat.id, 'departure'))
+    prev[callback.message.chat.id] = await callback.message.answer('1️⃣ \- *_Введите аэропорт/город отправления_*',reply_markup=await get_previous_mrkp(callback.message.chat.id, 'departure'))
 
 @router.callback_query(F.data == "continue", StateFilter(Order.departure))
 async def order4(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    prev[callback.message.chat.id] = await callback.message.answer('2️⃣ \- *_Введите аэропорт/город прибытия_*',reply_markup=get_previous_mrkp(callback.message.chat.id, 'destination'))
+    prev[callback.message.chat.id] = await callback.message.answer('2️⃣ \- *_Введите аэропорт/город прибытия_*',reply_markup=await get_previous_mrkp(callback.message.chat.id, 'destination'))
     await state.set_state(Order.to)
 
 @router.message(StateFilter(Order.to))
@@ -61,12 +61,12 @@ async def order_5(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.to))
 async def order_6(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    prev[callback.message.chat.id] = await callback.message.answer('2️⃣ \- *_Введите аэропорт/город прибытия_*', reply_markup=get_previous_mrkp(callback.message.chat.id, 'destination'))
+    prev[callback.message.chat.id] = await callback.message.answer('2️⃣ \- *_Введите аэропорт/город прибытия_*', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'destination'))
 
 @router.callback_query(F.data == "continue", StateFilter(Order.to))
 async def order7(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    prev[callback.message.chat.id] = await callback.message.answer('3️⃣ \- *_Введите количество мест_*:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'pieces'))
+    prev[callback.message.chat.id] = await callback.message.answer('3️⃣ \- *_Введите количество мест_*:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'pieces'))
     await state.set_state(Order.pcs)
 
 @router.message(StateFilter(Order.pcs))
@@ -80,12 +80,12 @@ async def order8(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.pcs))
 async def order_9(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    prev[callback.message.chat.id] = await callback.message.answer('4️⃣ \- *_Введите количество мест_*:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'pieces'))
+    prev[callback.message.chat.id] = await callback.message.answer('4️⃣ \- *_Введите количество мест_*:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'pieces'))
 
 @router.callback_query(F.data == "continue", StateFilter(Order.pcs),)
 async def order10(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    prev[callback.message.chat.id] = await callback.message.answer('4️⃣ - <b><i>Введите общий вес груза(кг)</i></b>:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'weight'), parse_mode=ParseMode.HTML)
+    prev[callback.message.chat.id] = await callback.message.answer('4️⃣ - <b><i>Введите общий вес груза(кг)</i></b>:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'weight'), parse_mode=ParseMode.HTML)
     await state.set_state(Order.weight)
 
 @router.message(StateFilter(Order.weight))
@@ -99,11 +99,11 @@ async def order11(message: types.Message, state: FSMContext):
 @router.callback_query(F.data == "change", StateFilter(Order.weight))
 async def order_12(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    prev[callback.message.chat.id] = await callback.message.answer('4️⃣ - <b><i>Введите общий вес груза(кг)</i></b>:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'weight'), parse_mode=ParseMode.HTML)
+    prev[callback.message.chat.id] = await callback.message.answer('4️⃣ - <b><i>Введите общий вес груза(кг)</i></b>:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'weight'), parse_mode=ParseMode.HTML)
 
 @router.callback_query(F.data == "continue", StateFilter(Order.weight))
 async def order13(callback: types.CallbackQuery, state: FSMContext):
-    prev[callback.message.chat.id] = await callback.message.answer('5️⃣ - <b><i>Введите общий объем груза(куб. м)</i></b>:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'volume'),parse_mode=ParseMode.HTML)
+    prev[callback.message.chat.id] = await callback.message.answer('5️⃣ - <b><i>Введите общий объем груза(куб. м)</i></b>:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'volume'),parse_mode=ParseMode.HTML)
     await state.set_state(Order.vol)
     await callback.message.delete()
 
@@ -117,12 +117,12 @@ async def order12(message: types.Message, state: FSMContext):
 
 @router.callback_query(F.data == "change", StateFilter(Order.vol))
 async def order_13(callback: types.CallbackQuery, state: FSMContext):
-    prev[callback.message.chat.id] = await callback.message.answer('5️⃣- <b><i>Введите общий объем груза(куб. м)</i></b>:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'volume'), parse_mode=ParseMode.HTML)
+    prev[callback.message.chat.id] = await callback.message.answer('5️⃣- <b><i>Введите общий объем груза(куб. м)</i></b>:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'volume'), parse_mode=ParseMode.HTML)
     await callback.message.delete()
 
 @router.callback_query(F.data == "continue", StateFilter(Order.vol))
 async def order14(callback: types.CallbackQuery, state: FSMContext):
-    get_time(message=callback.message)
+    await get_time(message=callback.message)
     prev[callback.message.chat.id] = await callback.message.answer('6️⃣\- *_Введите дату привоза груза на склад_*:', reply_markup=time_builder[callback.message.chat.id].as_markup(resize_keyboard = True))
     del time_builder[callback.message.chat.id]
     await state.set_state(Order.planned_time)
@@ -138,14 +138,14 @@ async def order15(message: types.Message, state: FSMContext):
 
 @router.callback_query(F.data == "change", StateFilter(Order.planned_time))
 async def order_16(callback: types.CallbackQuery, state: FSMContext):
-    get_time(message=callback.message)
+    await get_time(message=callback.message)
     prev[callback.message.chat.id] = await callback.message.answer('6️⃣ \- *_Введите дату привоза груза на склад_*:', reply_markup=time_builder[callback.message.chat.id].as_markup(resize_keyboard = True))
     del time_builder[callback.message.chat.id]
     await callback.message.delete()
 
 @router.callback_query(F.data == "continue", StateFilter(Order.planned_time))
 async def order17(callback: types.CallbackQuery, state: FSMContext):
-    prev[callback.message.chat.id] = await callback.message.answer('7️⃣ \- *_Введите ФИО/Название организации отправителя_*', reply_markup=get_previous_mrkp(callback.message.chat.id, 'shipper_name'))
+    prev[callback.message.chat.id] = await callback.message.answer('7️⃣ \- *_Введите ФИО/Название организации отправителя_*', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'shipper_name'))
     await state.set_state(Order.shipper_name)
     await callback.message.delete()
 
@@ -159,13 +159,13 @@ async def order18(message: types.Message, state: FSMContext):
 
 @router.callback_query(F.data == "change", StateFilter(Order.shipper_name))
 async def order_19(callback: types.CallbackQuery, state: FSMContext):
-    prev[callback.message.chat.id] = await callback.message.answer('7️⃣ \- *_Введите ФИО/Название организации отправителя_*:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'shipper_name'))
+    prev[callback.message.chat.id] = await callback.message.answer('7️⃣ \- *_Введите ФИО/Название организации отправителя_*:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'shipper_name'))
     await callback.message.delete()
 
 @router.callback_query(F.data == "continue", StateFilter(Order.shipper_name))
 async def order20(callback: types.CallbackQuery, state: FSMContext):
     # get_phone(message=callback.message)
-    prev[callback.message.chat.id] = await callback.message.answer('8️⃣\- *_Введите номер телефона отправителя_*', reply_markup=get_previous_mrkp(callback.message.chat.id, 'shipper_phone'))
+    prev[callback.message.chat.id] = await callback.message.answer('8️⃣\- *_Введите номер телефона отправителя_*', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'shipper_phone'))
     # del phone_builder[callback.message.chat.id]
     await state.set_state(Order.shipper_num)
     await callback.message.delete()
@@ -195,7 +195,7 @@ async def order_22(callback: types.CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == "continue", StateFilter(Order.shipper_num))
 async def order23(callback: types.CallbackQuery, state: FSMContext):
-    prev[callback.message.chat.id] = await callback.message.answer('9️⃣ \- *_Введите ФИО/Название организации получателя_*', reply_markup=get_previous_mrkp(callback.message.chat.id, 'consignee_name'))
+    prev[callback.message.chat.id] = await callback.message.answer('9️⃣ \- *_Введите ФИО/Название организации получателя_*', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'consignee_name'))
     await state.set_state(Order.consignee_name)
     await callback.message.delete()
 
@@ -214,7 +214,7 @@ async def order_25(callback: types.CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == "continue", StateFilter(Order.consignee_name))
 async def order26(callback: types.CallbackQuery, state: FSMContext):
-    prev[callback.message.chat.id] = await callback.message.answer('🔟 \- *_Введите номер телефона получателя_*:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'consignee_phone'))
+    prev[callback.message.chat.id] = await callback.message.answer('🔟 \- *_Введите номер телефона получателя_*:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'consignee_phone'))
     await state.set_state(Order.consignee_num)
     await callback.message.delete()
 
@@ -228,7 +228,7 @@ async def order27(message: types.Message, state: FSMContext):
 
 @router.callback_query(F.data == "change", StateFilter(Order.consignee_num))
 async def order_28(callback: types.CallbackQuery, state: FSMContext):
-    prev[callback.message.chat.id] = await callback.message.answer('🔟\- _*Введите номер телефона получателя*_:', reply_markup=get_previous_mrkp(callback.message.chat.id, 'consignee_phone'))
+    prev[callback.message.chat.id] = await callback.message.answer('🔟\- _*Введите номер телефона получателя*_:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'consignee_phone'))
     await callback.message.delete()
     
 @router.callback_query(F.data == "continue", StateFilter(Order.consignee_num))
@@ -287,10 +287,11 @@ async def order_cancel(callback: types.CallbackQuery, state: FSMContext):
 #     )
 #     )
 
-def get_previous_mrkp(user_id, name: str):
-    return types.ReplyKeyboardMarkup(keyboard=[[types.KeyboardButton(text=i) for i in database.select_order(user_id, name)]], resize_keyboard=True)
+async def get_previous_mrkp(user_id, name: str):
+    database = get_db()
+    return types.ReplyKeyboardMarkup(keyboard=[[types.KeyboardButton(text=i) for i in await database.select_order(user_id, name)]], resize_keyboard=True)
 
-def get_time(message: types.Message):
+async def get_time(message: types.Message):
     time_builder[message.chat.id] = ReplyKeyboardBuilder()
     time_builder[message.chat.id].add(types.KeyboardButton(
     text = datetime.date.today().strftime('%d-%m-%y') 
