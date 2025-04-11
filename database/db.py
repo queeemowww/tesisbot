@@ -91,7 +91,7 @@ class Db:
         }
         try:
             async with self.pool.acquire() as conn:
-                for el in await conn.fetch("""select distinct * from orders where (user_id) = '{user_id}' ORDER BY date DESC limit 3;"""):
+                for el in await conn.fetch(f"""select distinct * from orders where (user_id) = '{user_id}' ORDER BY date DESC limit 3;"""):
                     order_list.append(el[ordernum[name]])
                 return order_list
         except Exception as e:
@@ -120,7 +120,7 @@ class Db:
 
 # if __name__ == '__main__':
 #     db = Db()
-#     SELECT DISTINCT on (departure)
+#     SELECT DISTINCT (departure)
 #                     FROM (orders)
 #                     WHERE user_id = '1016604339'
 #                     ORDER BY date DESC
