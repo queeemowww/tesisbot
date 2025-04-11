@@ -10,7 +10,8 @@ import re
 
 class Tracker():
     def __init__(self, delay = None):
-        self.base_url = "https://mirazh.pulkovo-cargo.ru/pls/apex/f?p=729:1::::::"
+        self.led_url = "https://mirazh.pulkovo-cargo.ru/pls/apex/f?p=729:1::::::"
+        self.svo_url = "https://www.moscow-cargo.com/"
         self.browser = None
         self.page = None
 
@@ -25,7 +26,7 @@ class Tracker():
 
     async def track_svo(self, awb):
         await self.launch_browser()
-        await self.page.goto(self.base_url)
+        await self.page.goto(self.svo_url)
         awb_blank_elem = await self.page.query_selector_all('[class = "awb-prefix awb-part"]')
         awb_num_elem = await self.page.query_selector_all('[class = "awb-number awb-part"]')
         await awb_blank_elem[0].fill(awb[:3])
@@ -36,11 +37,11 @@ class Tracker():
         tds = await tbody.query_selector_all('td')
         if len(tds) <= 2:
             return 'ND'
-        return str(await tds[-1].inner_text()).replace("\n", "/")
+        return '<b>'+awb+'</b>\nПартия груза прилетела в Шереметьево рейсом(ами): ' + str(await tds[-1].inner_text()).replace("\n", "/")
     
     async def track_led(self, awb):
         await self.launch_browser()
-        await self.page.goto(self.base_url)
+        await self.page.goto(self.led_url)
         awb_blank_elem = await self.page.query_selector_all('[id = "P1_BLANK"]')
         awb_num_elem = await self.page.query_selector_all('[id = "P1_NOMER"]')
         await awb_blank_elem[0].fill(awb[:3])
@@ -58,7 +59,7 @@ class Tracker():
 
 if __name__ == '__main__':
     tr = Tracker()
-    print(asyncio.run(tr.track_led('421-78336425')))
+    print(asyncio.run(tr.track_svo('555-10217340')))
 
 
 # async def main():

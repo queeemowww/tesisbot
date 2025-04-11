@@ -77,9 +77,15 @@ async def track_4(message: types.Message, state: FSMContext):
 
     match airport[message.chat.id]:
         case 'LED':
-            tracks[message.chat.id] = await tracker[message.chat.id].track_led(blank[message.chat.id] + '-' + number[message.chat.id])
+            try:
+                tracks[message.chat.id] = await tracker[message.chat.id].track_led(blank[message.chat.id] + '-' + number[message.chat.id])
+            except:
+                tracks[message.chat.id] = 'Не удалось проверить статус груза. Повторите запрос позднее'
         case 'SVO':
-            tracks[message.chat.id] = await tracker[message.chat.id].track_svo(blank[message.chat.id] + '-' + number[message.chat.id])
+            try:
+                tracks[message.chat.id] = await tracker[message.chat.id].track_svo(blank[message.chat.id] + '-' + number[message.chat.id])
+            except:
+                tracks[message.chat.id] = 'Не удалось проверить статус груза. Повторите запрос позднее'
     try:
         await message.answer(tracks[message.chat.id], ParseMode.HTML, reply_markup=menu_builder.as_markup())
     except Exception as e:
