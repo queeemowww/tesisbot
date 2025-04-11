@@ -1,6 +1,6 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
-
+from database.db_provider import get_db
 from datetime import date
 
 departure_buttons = []
@@ -114,3 +114,76 @@ order_send_builder.row(types.InlineKeyboardButton(
     callback_data='cancel'),
     width=2
 )
+
+
+async def get_change_awb(pcs, w, v, fr, dest, date, shipper_fio, shipper_phone, consignee_fio, consignee_phone):
+    change_awb_builder = InlineKeyboardBuilder()
+    close_btn = types.InlineKeyboardButton(
+            text = '❌',
+            callback_data='close')
+    
+    go_btn = types.InlineKeyboardButton(
+            text = '✅',
+            callback_data='go')
+    
+    pcs_btn = (types.InlineKeyboardButton(
+            text = f'Мест: {pcs}',
+            callback_data='pieces'
+    ))
+
+    weight_btn = (types.InlineKeyboardButton(
+            text = f'Вес: {w}',
+            callback_data='weight'
+    ))
+
+    vol_btn = (types.InlineKeyboardButton(
+            text = f'Объем: {v}',
+            callback_data='volume'
+    ))
+
+    # cargo_btn = (types.InlineKeyboardButton(
+    #         text = f'Груз: {cargo}',
+    #         callback_data='cargo'
+    # ))
+
+    fr_btn = (types.InlineKeyboardButton(
+            text = f'Из: {fr}',
+            callback_data='departure'
+    ))
+
+    dest_btn = (types.InlineKeyboardButton(
+            text = f'До: {dest}',
+            callback_data='destination'
+    ))
+
+    date_btn = (types.InlineKeyboardButton(
+            text = f'Дата: {date}',
+            callback_data='date'
+    ))
+    shipper_fio_btn = (types.InlineKeyboardButton(
+            text = f'От: {shipper_fio}',
+            callback_data='shfio'
+    ))
+    shipper_phone_btn = (types.InlineKeyboardButton(
+            text = f'{shipper_phone}',
+            callback_data='shphone'
+    ))
+    consignee_fio_btn = (types.InlineKeyboardButton(
+            text = f'Пол: {consignee_fio}',
+            callback_data='cnfio'
+    ))
+    consignee_phone_btn = (types.InlineKeyboardButton(
+            text = f'{consignee_phone}',
+            callback_data='cnphone'
+    ))
+
+
+    change_awb_builder.row(pcs_btn, weight_btn)
+    change_awb_builder.row(vol_btn)
+    change_awb_builder.row(fr_btn, dest_btn)
+    change_awb_builder.row(shipper_fio_btn, shipper_phone_btn)
+    change_awb_builder.row(consignee_fio_btn, consignee_phone_btn)
+    change_awb_builder.row(close_btn, go_btn)
+
+    return change_awb_builder.as_markup()
+    
