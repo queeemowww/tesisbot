@@ -11,7 +11,8 @@ from kb.menu_kb import menu_builder
 from states import Order
 from aiogram.enums import ParseMode
 from admin import admin_ids
-from database.db_provider import get_db
+from database.db_provider import get_db, set_db_instance
+from database.db import Db
 router = Router()
 import datetime
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
@@ -27,6 +28,9 @@ change_val = {}
 
 @router.callback_query(F.data == "order", StateFilter(None))
 async def order_1(callback: types.CallbackQuery, state: FSMContext):
+    database = Db()
+    await database.init()
+    set_db_instance(database)
     await callback.message.delete()
     order[callback.message.chat.id] = {}
     prev[callback.message.chat.id] = await callback.message.answer('1️⃣ \- *_Введите аэропорт/город отправления_*', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'departure'))
@@ -329,7 +333,6 @@ async def order_send(callback: types.callback_query, state: FSMContext):
     await email_send.send_mail(message=mes)
     await callback.message.reply('<i>Заявка успешно отправлена! Наш сотрудник свяжется с Вами в рабочее время</i>', parse_mode = ParseMode.HTML, reply_markup = menu_builder.as_markup())
     del order[callback.message.chat.id]
-    del time_builder[callback.message.chat.id]
     await state.set_state(None)
 
 @router.callback_query(F.data == "cancel", F.data == 'close')
@@ -354,7 +357,7 @@ async def get_previous_mrkp(user_id, name: str):
     btns = [types.KeyboardButton(text=i) for i in await database.select_order(user_id, name)]
     for btn in btns:
         get_prv_bldr.row(btn)
-    return get_prv_bldr.as_markup()
+    return get_prv_bldr.as_markup(resize_keyboard = True)
 
     # return types.ReplyKeyboardMarkup(keyboard=[[types.KeyboardButton(text=i) for i in await database.select_order(user_id, name)]])
 

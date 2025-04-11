@@ -7,6 +7,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.enums import ParseMode
 import states
 from aiogram.types.input_file import FSInputFile
+from database.db import Db
+from database.db_provider import set_db_instance
 
 awb_blank = FSInputFile('./img/awb_blank.png')
 awb_num = FSInputFile('./img/awb_num.png')
@@ -23,6 +25,9 @@ airport = {}
 
 @router.callback_query(F.data == "track", StateFilter(None))
 async def track_1(callback: types.CallbackQuery, state: FSMContext):
+    database = Db()
+    await database.init()
+    set_db_instance(database)
     await callback.message.delete()
     await callback.message.answer('Выберите аэропорт отправления',
                                 reply_markup=airport_track_builder.as_markup())

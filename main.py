@@ -49,6 +49,9 @@ class TesisBot():
 
         @self.dp.message(StateFilter(None), F.text.lower() != '/orders')
         async def cmd_menu(message: types.Message):
+            self.database = Db()
+            await self.database.init()
+            set_db_instance(self.database)
             await message.delete()
             prev = await message.answer(
                 'Выберите действие\. _для сброса переписки введите_ "/clear"',
