@@ -15,6 +15,7 @@ class Order(StatesGroup):
     consignee_num = State()
     send = State()
     change = State()
+    new = State()
 
 class Track(StatesGroup):
     airport = State()

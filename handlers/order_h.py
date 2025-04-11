@@ -240,8 +240,7 @@ async def order_28(callback: types.CallbackQuery, state: FSMContext):
 async def order_check(callback: types.CallbackQuery, state: FSMContext):
     database = get_db()
     # try:
-
-    await callback.message.answer('Ваша заявка <i>(Выберите параметр для изменения или нажмите продолжить ✅)</i>', reply_markup=await get_change_awb(pcs=order[callback.message.chat.id]['pieces'],
+    prev[callback.message.chat.id] = await callback.message.answer('Ваша заявка <i>(Выберите параметр для изменения или нажмите продолжить ✅)</i>', reply_markup=await get_change_awb(pcs=order[callback.message.chat.id]['pieces'],
                                                                             w = order[callback.message.chat.id]['weight'],
                                                                             v = order[callback.message.chat.id]['volume'],
                                                                             fr = order[callback.message.chat.id]['departure'],
@@ -266,8 +265,10 @@ async def order_check(callback: types.CallbackQuery, state: FSMContext):
     #     await state.set_state(None)
     # await callback.message.delete()
 
-@router.callback_query(StateFilter(Order.send), F.data != 'go', F.data != 'cancel', F.data != 'close', F.data != 'change')
+@router.callback_query(StateFilter(Order.send), F.data != 'go', F.data != 'cancel', F.data != 'close', F.data != 'change', F.data != 'continue')
 async def order_change1(callback: types.CallbackQuery, state: FSMContext):
+    print('pick')
+    await prev[callback.message.chat.id].delete()
     parameters = {
         'pieces': "количество мест",
         'weight': 'общий вес груза',
@@ -293,19 +294,46 @@ async def order_change1(callback: types.CallbackQuery, state: FSMContext):
         'cnfio': 'ФИО/наименования получателя',
         'cnphone': 'контактного номера телефона получателя'
     }
-    # await prev[callback.message.chat.id].delete()
     prev[callback.message.chat.id] = await callback.message.answer(f'Введите новое значение для <b>{parameters_roditelniy[callback.data]}</b>', parse_mode=ParseMode.HTML)
-    change_val[callback.message.chat.id] = parameters[callback.data]
+    change_val[callback.message.chat.id] = callback.data
 
 @router.message(StateFilter(Order.send))
 async def order_change2(message: types.Message, state: FSMContext):
+    print('confirm')
     await prev[message.chat.id].delete()
     await message.delete()
+    print(order[message.chat.id], message.text)
     prev[message.chat.id] = await message.answer(f'<b>{change_val[message.chat.id]}: {message.text}</b>', reply_markup=order_change_builder.as_markup(), parse_mode= ParseMode.HTML)
     order[message.chat.id][change_val[message.chat.id]] = message.text
+    print(order[message.chat.id], message.text)
+    await state.set_state(Order.new)
 
-@router.callback_query(StateFilter(Order.send), F.data == 'change')
-async def order_change3(callback: types.callback_query, state: FSMContext):
+@router.callback_query(StateFilter(Order.new), F.data == 'continue')
+async def order_new1(callback: types.callback_query, state: FSMContext):
+    database = get_db()
+    await prev[callback.message.chat.id].delete()
+    prev[callback.message.chat.id] = await callback.message.answer('Ваша заявка <i>(Выберите параметр для изменения или нажмите продолжить ✅)</i>', reply_markup=await get_change_awb(pcs=order[callback.message.chat.id]['pieces'],
+                                                                            w = order[callback.message.chat.id]['weight'],
+                                                                            v = order[callback.message.chat.id]['volume'],
+                                                                            fr = order[callback.message.chat.id]['departure'],
+                                                                            dest = order[callback.message.chat.id]['destination'],
+                                                                            date = order[callback.message.chat.id]['date'],
+                                                                            shipper_fio=order[callback.message.chat.id]['shfio'],
+                                                                            shipper_phone=order[callback.message.chat.id]['shphone'],
+                                                                            consignee_fio=order[callback.message.chat.id]['cnfio'],
+                                                                            consignee_phone=order[callback.message.chat.id]['cnphone']
+                                                                            ), parse_mode=ParseMode.HTML)
+
+    await database.insert_order(date=datetime.datetime.now(), departure=order[callback.message.chat.id]['departure'],
+                            destination=order[callback.message.chat.id]['destination'], pieces=order[callback.message.chat.id]['pieces'],
+                            weight=order[callback.message.chat.id]['weight'], volume=order[callback.message.chat.id]['volume'],
+                            warehouse_date=order[callback.message.chat.id]['date'], shipper_name=order[callback.message.chat.id]['shfio'],
+                            shipper_phone=order[callback.message.chat.id]['shphone'], consignee_name=order[callback.message.chat.id]['cnfio'],
+                            consignee_phone=order[callback.message.chat.id]['cnphone'], user_id=callback.message.chat.id)
+    await state.set_state(Order.send)
+
+@router.callback_query(StateFilter(Order.new), F.data == 'change')
+async def order_new2(callback: types.callback_query, state: FSMContext):
     parameters_roditelniy = {
         'pieces': "количества мест",
         'weight': 'общего веса груза',
@@ -322,17 +350,36 @@ async def order_change3(callback: types.callback_query, state: FSMContext):
     prev[callback.message.chat.id] = await callback.message.answer(f'Введите новое значение для <b>{parameters_roditelniy[callback.data]}</b>', parse_mode=ParseMode.HTML)
     change_val[callback.message.chat.id] = callback.data
 
+# @router.callback_query(StateFilter(Order.send), F.data == 'change')
+# async def order_change3(callback: types.callback_query, state: FSMContext):
+#     parameters_roditelniy = {
+#         'pieces': "количества мест",
+#         'weight': 'общего веса груза',
+#         'volume': 'общего объема груза',
+#         'departure': 'аэропорта/города отправления',
+#         'destination': 'аэропорта/города прибытия',
+#         'date': 'даты привоза груза',
+#         'shfio': 'ФИО/наименования отправителя',
+#         'shphone': 'ФИО/наименования получателя',
+#         'cnfio': 'контактного номера телефона отправителя',
+#         'cnphone': 'контактного номера телефона получателя'
+#     }
+#     await prev[callback.message.chat.id].delete()
+#     prev[callback.message.chat.id] = await callback.message.answer(f'Введите новое значение для <b>{parameters_roditelniy[callback.data]}</b>', parse_mode=ParseMode.HTML)
+#     change_val[callback.message.chat.id] = callback.data
+
 
 @router.callback_query(StateFilter(Order.send), F.data == 'go')
 async def order_send(callback: types.callback_query, state: FSMContext):
-    await callback.message.edit_text('<code>' + callback.message.text + '</code>', parse_mode=ParseMode.HTML, reply_markup=None)
     mes = '1 - Аэропорт/город отправления: ' + order[callback.message.chat.id]['departure'] +'\n2 - Аэропорт/город прибытия: ' + order[callback.message.chat.id]['destination'] +'\n3 - Количество мест: ' + order[callback.message.chat.id]['pieces'] +'\n4 - Общий вес груза: ' + order[callback.message.chat.id]['weight'] +'\n5 - Общий объем груза: ' + order[callback.message.chat.id]['volume'] +'\n6 - Планируемая дата привоза на склад: ' + order[callback.message.chat.id]['date'] +'\n7 - ФИО/Название организации отправителя: ' + order[callback.message.chat.id]['shfio'] +'\n8 - Номер телефона отправителя: ' + order[callback.message.chat.id]['shphone'] +'\n9 - ФИО/Название организации получвтеля: ' + order[callback.message.chat.id]['cnfio'] +'\n10 - Номер телефона получателя: ' + order[callback.message.chat.id]['cnphone']
+    await prev[callback.message.chat.id].edit_text("<i>Ваша заявка:</i><code>"+mes+"</code>", parse_mode = ParseMode.HTML, reply_markup = None)
     await callback.message.bot.send_message(chat_id=admin_ids['Gleb'], text = mes, parse_mode=ParseMode.HTML)
     await callback.message.bot.send_message(chat_id=admin_ids['operator'], text = mes, parse_mode=ParseMode.HTML)
     email_send = Send_order()
     await email_send.send_mail(message=mes)
     await callback.message.reply('<i>Заявка успешно отправлена! Наш сотрудник свяжется с Вами в рабочее время</i>', parse_mode = ParseMode.HTML, reply_markup = menu_builder.as_markup())
     del order[callback.message.chat.id]
+    del prev[callback.message.chat.id]
     await state.set_state(None)
 
 @router.callback_query(F.data == "cancel", F.data == 'close')
