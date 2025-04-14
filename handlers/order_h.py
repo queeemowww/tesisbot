@@ -382,10 +382,13 @@ async def order_send(callback: types.callback_query, state: FSMContext):
     del prev[callback.message.chat.id]
     await state.set_state(None)
 
-@router.callback_query(F.data == "cancel", F.data == 'close')
+@router.callback_query(F.data == "cancel")
 async def order_cancel(callback: types.CallbackQuery, state: FSMContext):
-    del order[callback.message.chat.id]
-    del time_builder[callback.message.chat.id]
+    try:
+        del order[callback.message.chat.id]
+        del time_builder[callback.message.chat.id]
+    except:
+        pass
     await callback.message.delete()
     await callback.message.answer('Выберите действие', reply_markup=menu_builder.as_markup())
     await state.set_state(None)

@@ -120,7 +120,7 @@ async def get_change_awb(pcs, w, v, fr, dest, date, shipper_fio, shipper_phone, 
     change_awb_builder = InlineKeyboardBuilder()
     close_btn = types.InlineKeyboardButton(
             text = '❌',
-            callback_data='close')
+            callback_data='cancel')
     
     go_btn = types.InlineKeyboardButton(
             text = '✅',
