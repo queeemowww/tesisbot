@@ -28,6 +28,7 @@ class Db:
             await conn.execute("""
                 CREATE TABLE IF NOT EXISTS orders (
                     id SERIAL PRIMARY KEY,
+                    awb VARCHAR(12) DEFAULT '000-00000000',
                     date VARCHAR(50) NOT NULL,
                     departure VARCHAR(20) NOT NULL,
                     destination VARCHAR(20) NOT NULL,
@@ -98,31 +99,19 @@ class Db:
         except Exception as e:
             print(f"[select_order error] {e}")
             return []
-
-        # column = order_column_map.get(name)
-        # if column is None:
-        #     raise ValueError(f"Unknown field: {name}")
-
-        # try:
-        #     async with self.pool.acquire() as conn:
-        #         rows = await conn.fetch(f"""
-        #             SELECT DISTINCT {column}
-        #             FROM orders
-        #             WHERE user_id = $1
-        #             ORDER BY date DESC
-        #             LIMIT 3;
-        #         """, str(user_id))
-        #         order_list = [r[column] for r in rows]
-        #         return order_list
-        # except Exception as e:
-        #     print(f"[select_order error] {e}")
-        #     return []
+        
+    async def get_order_num(self):
+        orders = []
+        try:
+            async with self.pool.acquire() as conn:
+                orders = await conn.fetch(f"""select * from orders;""")
+            return len(orders)
+        except Exception as e:
+            print(f"[select_order error] {e}")
+            return []
 
 
 # if __name__ == '__main__':
 #     db = Db()
-#     SELECT DISTINCT (departure)
-#                     FROM (orders)
-#                     WHERE user_id = '1016604339'
-#                     ORDER BY date DESC
-#                     LIMIT 3;
+#     asyncio.run(db.init())
+#     asyncio.run(db.get_order_num())

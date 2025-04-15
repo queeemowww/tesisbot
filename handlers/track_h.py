@@ -25,13 +25,16 @@ airport = {}
 
 @router.callback_query(F.data == "track", StateFilter(None))
 async def track_1(callback: types.CallbackQuery, state: FSMContext):
-    database = Db()
-    await database.init()
-    set_db_instance(database)
-    await callback.message.delete()
-    await callback.message.answer('Выберите аэропорт отправления',
-                                reply_markup=airport_track_builder.as_markup())
-    await state.set_state(states.Track.airport)
+    try:
+        database = Db()
+        await database.init()
+        set_db_instance(database)
+        await callback.message.delete()
+        await callback.message.answer('Выберите аэропорт отправления',
+                                    reply_markup=airport_track_builder.as_markup())
+        await state.set_state(states.Track.airport)
+    except:
+        pass
 
 @router.message(StateFilter(None), Command('track'))
 async def track_1_1(message: types.Message, state: FSMContext):

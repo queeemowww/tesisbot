@@ -11,17 +11,16 @@ from database.db_provider import set_db_instance
 
 
 router = Router()
+prev = {}
 
-@router.callback_query(F.data == "manager")
+@router.callback_query(F.data == "mycargo")
 async def connect_manager(callback: types.CallbackQuery):
     try:
         database = Db()
         await database.init()
         set_db_instance(database)
         await callback.message.delete()
-        await callback.message.answer("Опишите Ваш запрос оператору")
-        await callback.message.bot.send_contact(chat_id=callback.message.chat.id, phone_number='+79818401424', first_name='Tesis operator')
-        await callback.message.answer('Выберите действие', reply_markup=menu_builder.as_markup())
+        prev[callback.message.chat.id] = await callback.message.answer('Мои грузы📦', reply_markup=menu_builder.as_markup())
     except:
         pass
 
