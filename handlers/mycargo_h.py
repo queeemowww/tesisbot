@@ -23,4 +23,6 @@ async def connect_manager(callback: types.CallbackQuery):
         prev[callback.message.chat.id] = await callback.message.answer('Мои грузы📦', reply_markup=menu_builder.as_markup())
     except:
         pass
+    finally:
+        await database.close()
 

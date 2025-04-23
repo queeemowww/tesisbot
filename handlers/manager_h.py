@@ -24,4 +24,6 @@ async def connect_manager(callback: types.CallbackQuery):
         await callback.message.answer('Выберите действие', reply_markup=menu_builder.as_markup())
     except:
         pass
+    finally:
+        await database.close()
 

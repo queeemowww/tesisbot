@@ -8,7 +8,7 @@ from aiogram.enums import ParseMode
 import states
 from aiogram.types.input_file import FSInputFile
 from database.db import Db
-from database.db_provider import set_db_instance
+from database.db_provider import set_db_instance, get_db
 
 awb_blank = FSInputFile('./img/awb_blank.png')
 awb_num = FSInputFile('./img/awb_num.png')
@@ -70,6 +70,7 @@ async def track_3(message: types.Message, state: FSMContext):
 
 @router.message(states.Track.number, F.text.len() == 8)
 async def track_4(message: types.Message, state: FSMContext):
+    database = get_db()
     number[message.chat.id] = message.text
     await todelete[message.chat.id].delete()
     del todelete[message.chat.id]
@@ -98,12 +99,15 @@ async def track_4(message: types.Message, state: FSMContext):
     del number[message.chat.id]
     del tracker[message.chat.id]
     del tracks[message.chat.id]
+    await database.close()
 
 @router.callback_query(F.data == 'cancel_tracking', StateFilter(states.Track))
 async def cancel_track(callback: types.CallbackQuery, state: FSMContext):
+    database = get_db()
     await callback.message.delete()
     await callback.message.answer('<i>Трекинг отменен</i>', reply_markup=menu_builder.as_markup(), parse_mode=ParseMode.HTML)
     await state.set_state(None)
+    await database.close()
 
 @router.message(states.Track.blank)
 async def track_2_incorrect(message: types.Message):

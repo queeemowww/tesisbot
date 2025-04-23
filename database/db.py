@@ -13,6 +13,12 @@ class Db:
             await self.create_order()
         except:
             pass
+    
+    async def close(self):
+        try:
+            await self.pool.close()
+        except:
+            pass
 
     async def create_users(self):
         async with self.pool.acquire() as conn:

@@ -31,3 +31,5 @@ async def fesco_1(callback: types.CallbackQuery, state: FSMContext):
 Наши поезда, состоящие из 16 багажных вагонов, курсируют <b>до трех раз в неделю</b>, обеспечивая бесперебойную логистику для вашего бизнеса''', reply_markup=menu_builder.as_markup(), parse_mode=ParseMode.HTML)
     except:
         pass
+    finally:
+        await database.close()

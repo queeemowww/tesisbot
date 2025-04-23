@@ -25,6 +25,7 @@ phone_builder = {}
 prev = {}
 change_val = {}
 
+
 @router.callback_query(F.data == "order", StateFilter(None))
 async def order_1(callback: types.CallbackQuery, state: FSMContext):
     try:
@@ -354,6 +355,7 @@ async def order_new2(callback: types.callback_query, state: FSMContext):
 
 @router.callback_query(StateFilter(Order.send), F.data == 'go')
 async def order_send(callback: types.callback_query, state: FSMContext):
+    database = get_db()
     db = get_db()
     await db.insert_order(date=datetime.datetime.now(), departure=order[callback.message.chat.id]['departure'],
                             destination=order[callback.message.chat.id]['destination'], pieces=order[callback.message.chat.id]['pieces'],
@@ -374,9 +376,11 @@ async def order_send(callback: types.callback_query, state: FSMContext):
     del prev[callback.message.chat.id]
     await state.set_state(None)
     num_of_order += 1
+    await database.close()
 
 @router.callback_query(F.data == "cancel")
 async def order_cancel(callback: types.CallbackQuery, state: FSMContext):
+    database = get_db()
     try:
         del order[callback.message.chat.id]
         del time_builder[callback.message.chat.id]
@@ -385,6 +389,8 @@ async def order_cancel(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer('Выберите действие', reply_markup=menu_builder.as_markup())
     await state.set_state(None)
+    await database.close()
+    
 
 # def get_phone(message: types.Message):
 #     phone_builder[message.chat.id]= ReplyKeyboardBuilder()

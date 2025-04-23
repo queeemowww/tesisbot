@@ -21,6 +21,9 @@ async def send_contacts(callback: types.CallbackQuery):
         await callback.message.answer('Выберите действие', reply_markup=menu_builder.as_markup())
     except:
         pass
+    
+    finally:
+        await database.close()
 
 @router.message(F.text.lower() == 'нюся')
 async def send_nused(message: types.Message):
