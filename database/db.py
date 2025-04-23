@@ -7,9 +7,12 @@ class Db:
         self.pool = None
 
     async def init(self):
-        self.pool = await asyncpg.create_pool(dsn=self.dsn)
-        await self.create_users()
-        await self.create_order()
+        try:
+            self.pool = await asyncpg.create_pool(dsn=self.dsn)
+            await self.create_users()
+            await self.create_order()
+        except:
+            pass
 
     async def create_users(self):
         async with self.pool.acquire() as conn:
