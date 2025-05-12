@@ -17,7 +17,7 @@ class Tracker():
 
     async def launch_browser(self):
         playwright = await async_playwright().start()
-        self.browser = await playwright.chromium.launch(headless=False)
+        self.browser = await playwright.chromium.launch(headless=True)
         self.page = await self.browser.new_page()
 
     async def close_browser(self):
@@ -57,9 +57,9 @@ class Tracker():
         return states
 
 
-# if __name__ == '__main__':
-#     tr = Tracker()
-#     print(asyncio.run(tr.track_svo('555-10217340')))
+if __name__ == '__main__':
+    tr = Tracker()
+    print(asyncio.run(tr.track_svo('555-10217340')))
 
 
 # async def main():
