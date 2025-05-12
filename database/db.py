@@ -88,16 +88,16 @@ class Db:
     async def select_order(self, user_id, name):
         order_list = []
         ordernum = {
-            'departure': 2,
-            'destination': 3,
-            'pieces': 4,
-            'weight': 5,
-            'volume' : 6,
-            'warehouse_date': 7,
-            'shipper_name': 8,
-            'shipper_phone': 9,
-            'consignee_name': 10,
-            'consignee_phone': 11
+            'departure': 3,
+            'destination': 4,
+            'pieces': 5,
+            'weight': 6,
+            'volume' : 7,
+            'warehouse_date': 8,
+            'shipper_name': 9,
+            'shipper_phone': 10,
+            'consignee_name': 11,
+            'consignee_phone': 12
         }
         
         try:
