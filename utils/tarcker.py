@@ -57,9 +57,9 @@ class Tracker():
         return states
 
 
-if __name__ == '__main__':
-    tr = Tracker()
-    print(asyncio.run(tr.track_svo('555-10217340')))
+# if __name__ == '__main__':
+#     tr = Tracker()
+#     print(asyncio.run(tr.track_svo('555-10217340')))
 
 
 # async def main():
