@@ -264,13 +264,6 @@ async def order_check(callback: types.CallbackQuery, state: FSMContext):
                                                                             consignee_phone=order[callback.message.chat.id]['cnphone']
                                                                             ), parse_mode=ParseMode.HTML)
 
-    await database.insert_order(date=datetime.datetime.now(), departure=order[callback.message.chat.id]['departure'],
-                            destination=order[callback.message.chat.id]['destination'], pieces=order[callback.message.chat.id]['pieces'],
-                            weight=order[callback.message.chat.id]['weight'], volume=order[callback.message.chat.id]['volume'],
-                            warehouse_date=order[callback.message.chat.id]['date'], shipper_name=order[callback.message.chat.id]['shfio'],
-                            shipper_phone=order[callback.message.chat.id]['shphone'], consignee_name=order[callback.message.chat.id]['cnfio'],
-                            consignee_phone=order[callback.message.chat.id]['cnphone'], user_id=callback.message.chat.id)
-
     await state.set_state(Order.send)
     # except:
     #     await callback.message.answer("<code>К сожалению, заявка не была отправлена. \nПопробуйте повторить запрос с корректными данными</code>",parse_mode=ParseMode.HTML, reply_markup=menu_builder.as_markup())
