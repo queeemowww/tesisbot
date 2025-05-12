@@ -34,6 +34,15 @@ class TesisBot():
         self.dp = Dispatcher()
         self.dp.include_routers(order_h.router, track_h.router, manager_h.router, contacts_h.router, fesco_h.router, mycargo_h.router)
 
+    # async def set_commands(app):
+    #     await app.bot.set_my_commands([
+    #         Command("start", "Начать работу"),
+    #         BotCommand("menu", "Открыть меню"),
+    #         BotCommand("help", "Помощь"),
+    #         BotCommand("stop", "Остановить бота"),
+    #         BotCommand("info", "Обо мне")
+    #     ])
+
     async def logic(self):
         # Хэндлер на команду /start
 
