@@ -66,6 +66,7 @@ class TesisBot():
             self.database = Db()
             await self.database.init()
             set_db_instance(self.database)
+            await self.database.insert_user(message.chat.id, message.chat.username, message.chat.first_name, message.chat.last_name)
             await message.delete()
             prev[message.chat.id] = await message.answer(
                 'Выберите действие\. _для сброса переписки введите_ "/clear"',

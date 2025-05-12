@@ -32,6 +32,7 @@ async def order_1(callback: types.CallbackQuery, state: FSMContext):
         database = Db()
         await database.init()
         set_db_instance(database)
+        await database.insert_user(callback.message.chat.id, callback.message.chat.username, callback.message.chat.first_name, callback.message.chat.last_name)
         await callback.message.delete()
         order[callback.message.chat.id] = {}
         prev[callback.message.chat.id] = await callback.message.answer('1️⃣ \- *_Введите аэропорт/город отправления_*', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'departure'))

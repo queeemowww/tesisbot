@@ -19,6 +19,7 @@ async def connect_manager(callback: types.CallbackQuery):
         database = Db()
         await database.init()
         set_db_instance(database)
+        await database.insert_user(callback.message.chat.id, callback.message.chat.username, callback.message.chat.first_name, callback.message.chat.last_name)
         await callback.message.delete()
         prev[callback.message.chat.id] = await callback.message.answer('Мои грузы📦', reply_markup=menu_builder.as_markup())
     except:
