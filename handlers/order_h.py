@@ -232,11 +232,16 @@ async def order27(message: types.Message, state: FSMContext):
     await prev[message.chat.id].delete()
     del prev[message.chat.id]
     order[message.chat.id]['cnphone'] = message.text
-    await message.answer('<code>Номер телефона получателя: ' + message.text+ "</code>", parse_mode=ParseMode.HTML, reply_markup=order_change_builder.as_markup())
+    prev[message.chat.id] = await message.answer('<code>Номер телефона получателя: ' + message.text+ "</code>", parse_mode=ParseMode.HTML, reply_markup=order_change_builder.as_markup())
     await message.delete()
 
 @router.callback_query(F.data == "change", StateFilter(Order.consignee_num))
 async def order_28(callback: types.CallbackQuery, state: FSMContext):
+    try:
+        del prev[callback.message.chat.id]
+        await prev[callback.message.chat.id].delete()
+    except:
+        pass
     prev[callback.message.chat.id] = await callback.message.answer('🔟\- _*Введите номер телефона получателя*_:', reply_markup=await get_previous_mrkp(callback.message.chat.id, 'consignee_phone'))
     await callback.message.delete()
     
